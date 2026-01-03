@@ -1,0 +1,14 @@
+{
+    "display_name": "Atmosphere",
+    "loading_order": 1,
+    "requires": [],
+    "optional": [],
+    "dependencies": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "pinhead",
+    "version": "1.0.0",
+    "homePage": "https://github.com/pinheadtf2/atmosphere",
+    "auto_update": true,
+    "minimum_client_version": "1.0.0"
+}

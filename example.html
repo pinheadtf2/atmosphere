@@ -1,0 +1,41 @@
+<div class="atmosphere-extension-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>Atmosphere </b>
+            Real-World Weather
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <div class="atmosphere-extension_block flex-container">
+                <label for="atmosphere_token">
+                    <b>WeatherAPI Token</b>
+                </label>
+                <input id="atmosphere_token" class="text_pole" type="password" placeholder="0123456789abcdefghijklmnopqrstuvwxyz" />
+                <small class="notes">Free API key from <a href="https://www.weatherapi.com/">WeatherAPI</a></small>
+            </div>
+            
+            <div class="atmosphere-extension_block flex-container">
+                <label for="atmosphere_location">
+                    <b>Location</b>
+                </label>
+                <input id="atmosphere_location" class="text_pole" type="text" placeholder="Miami, Florida" />
+                <small class="notes">See supported types at <a href="https://www.weatherapi.com/docs/#intro-request-param">WeatherAPI documentation</a></small>
+            </div>
+
+            <div class="atmosphere-extension_block flex-container">
+                <input id="atmosphere_metric" type="checkbox" />
+                <label for="atmosphere_metric">Use metric for units? (e.g. °C instead of °F)</label>
+            </div>
+
+            <div class="atmosphere-extension_block flex-container">
+                <label for="atmosphere_cache_lifetime">
+                    <b>Cache Lifetime</b>
+                </label>
+                <input id="atmosphere_cache_lifetime" class="text_pole" type="number" placeholder="15" />
+                <small class="notes">How many minutes should we wait before getting new weather data?</small>
+            </div>
+
+            <hr class="sysHR" />
+        </div>
+    </div>
+</div>

@@ -2,59 +2,70 @@
 import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
 import { saveSettingsDebounced } from "../../../../script.js";
 
-// Keep track of where your extension is located, name should match repo name
+// Extension data
 const extensionName = "atmosphere";
 const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`;
 const extensionSettings = extension_settings[extensionName];
 const defaultSettings = {
-    token: "",  // api token from https://www.weatherapi.com/
-    location: "",  // location, see https://www.weatherapi.com/docs/#intro-request-param
-    metric: false,  // false is metric, true is imperial
-    cache_lifetime: 15,  // stored as minutes
+    token: "",              // api token from https://www.weatherapi.com/
+    location: "",           // location, see https://www.weatherapi.com/docs/#intro-request-param
+    metric: false,          // false is metric, true is imperial (default true/imperial)
+    cache_lifetime: 15,     // stored as minutes, recommend fairly high value
 };
 
 async function loadSettings() {
-    extension_settings[extensionName] = extension_settings[extensionName] || {};
-    if (Object.keys(extension_settings[extensionName]).length === 0) {
-        Object.assign(extension_settings[extensionName], defaultSettings);
+    extensionSettings = extensionSettings || {};
+    if (Object.keys(extensionSettings).length === 0) {
+        Object.assign(extensionSettings, defaultSettings);
     }
 
-    $("#atmosphere_token").val(extension_settings[extensionName].token);
-    $("#atmosphere_location").val(extension_settings[extensionName].location);
-    $("#atmosphere_metric").prop("checked", extension_settings[extensionName].metric);
-    $("#atmosphere_cache_lifetime").val(extension_settings[extensionName].cache_lifetime);
+    $("#atmosphere_token").val(extensionSettings.token);
+    $("#atmosphere_location").val(extensionSettings.location);
+    $("#atmosphere_metric").prop("checked", extensionSettings.metric);
+    $("#atmosphere_cache_lifetime").val(extensionSettings.cache_lifetime);
 }
 
-function onTokenChange(event) {
+function onSettingUpdateToken(event) {
     const value = String($(event.target).val());
-    extension_settings[extensionName].token = value;
+    extensionSettings.token = value.trim();
     saveSettingsDebounced();
 }
 
-function onLocationChange(event) {
+function onSettingUpdateLocation(event) {
     const value = String($(event.target).val());
-    extension_settings[extensionName].location = value;
+    extensionSettings.location = value.trim();
+    toastr.info(`Location updated to ${value.trim()}!`);
+    console.log(`[Atmosphere] Location updated to ${value.trim()}!`)
     saveSettingsDebounced();
 }
 
-function onUnitChange(event) {
+function onSettingUpdateUnit(event) {
     const value = Boolean($(event.target).prop("checked"));
-    extension_settings[extensionName].metric = value;
+    extensionSettings.metric = value;
     saveSettingsDebounced();
 }
 
-function onCacheLifetimeChange(event) {
+function onSettingUpdateCacheLifetime(event) {
     const value = String($(event.target).val());
-    extension_settings[extensionName].cache_lifetime = value;
+    extensionSettings.cache_lifetime = value;
     saveSettingsDebounced();
+}
+
+// actual weather api work happens here
+async function fetchWeather() {
+    toastr.info("Fetch weather function was called!");
+    const request = await fetch(`https://api.weatherapi.com/v1/current.json?key=${extensionSettings.token}&q=${extensionSettings.location}&aqi=no`)
+    const response = await request.json();
+    console.log("[Atmosphere] fetched weather:", response)
+    toastr.info("Fetch weather function should be logged to console!");
 }
 
 // Extension initialization
 jQuery(async () => {
-    console.log(`[${extensionName}] loading...`);
+    console.log("[Atmosphere] loading...");
    
     try {
-        // Load HTML from file
+        // Load settings panel HTML from file
         const settingsHtml = await $.get(`${extensionFolderPath}/example.html`);
        
         // Append settingsHtml to extensions_settings
@@ -62,17 +73,20 @@ jQuery(async () => {
         // Left should be extensions that deal with system functions and right should be visual/UI related 
         $("#extensions_settings2").append(settingsHtml);
        
-        // Bind events
-        $("#atmosphere_token").on("input", onTokenChange);
-        $("#atmosphere_location").on("input", onLocationChange);
-        $("#atmosphere_metric").on("click", onUnitChange);
-        $("#atmosphere_cache_lifetime").on("input", onCacheLifetimeChange);
+        // Bind setting panel elements to update events
+        $("#atmosphere_token").on("input", onSettingUpdateToken);
+        $("#atmosphere_location").on("input", onSettingUpdateLocation);
+        $("#atmosphere_metric").on("click", onSettingUpdateUnit);
+        $("#atmosphere_cache_lifetime").on("input", onSettingUpdateCacheLifetime);
+
+        // Fetch weather button (mostly for debugging)
+        $("#atmosphere_fetch_weather").on("click", fetchWeather)
        
         // Load saved settings
         await loadSettings();
        
-        console.log(`[${extensionName}] loaded`);
+        console.log("[Atmosphere] loaded");
     } catch (error) {
-        console.error(`[${extensionName}] failed to load:`, error);
+        console.error("[Atmosphere] failed to load:", error);
     }
 });

@@ -1,8 +1,7 @@
 <div class="atmosphere-extension-settings">
     <div class="inline-drawer">
         <div class="inline-drawer-toggle inline-drawer-header">
-            <b>Atmosphere </b>
-            Real-World Weather
+            <b>Atmosphere</b>
             <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
         </div>
         <div class="inline-drawer-content">
@@ -24,7 +23,8 @@
 
             <div class="atmosphere-extension_block flex-container">
                 <input id="atmosphere_metric" type="checkbox" />
-                <label for="atmosphere_metric">Use metric for units? (e.g. °C instead of °F)</label>
+                <label for="atmosphere_metric">Use metric units?</label>
+                <small class="notes">(e.g. °C instead of °F)</small>
             </div>
 
             <div class="atmosphere-extension_block flex-container">
@@ -35,6 +35,10 @@
                 <small class="notes">How many minutes should we wait before getting new weather data?</small>
             </div>
 
+            <div class="atmosphere-extension_block flex-container">
+                <input id="atmosphere_fetch_weather" class="menu_button" type="submit" value="Fetch Weather" />
+            </div>
+                
             <hr class="sysHR" />
         </div>
     </div>
